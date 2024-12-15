@@ -12,13 +12,20 @@ public class TimeSystem : MonoBehaviour
     private float timeRemaining = 60f;  // Total time for the game
     private bool movingRingActivated = false;   // Flag to track MovingRing activation
     private bool growAndShrinkActivated = false; // Flag to track GrowAndShrink activation
+    private bool isGameOver = false;    // Flag to check if the game is over
 
     void Update()
     {
+        // Stop further updates when the game is over
+        if (isGameOver) return;
+
         // Decrease the timer
         if (timeRemaining > 0)
         {
             timeRemaining -= Time.deltaTime;
+
+            // Clamp timeRemaining to avoid negative values
+            timeRemaining = Mathf.Max(timeRemaining, 0);
 
             // Update the UI
             UpdateTimerUI();
@@ -28,7 +35,7 @@ public class TimeSystem : MonoBehaviour
         }
         else
         {
-            // Game over logic
+            // Trigger game over logic
             EndGame();
         }
     }
@@ -69,10 +76,15 @@ public class TimeSystem : MonoBehaviour
     {
         GameOver.SetActive(true);
         Debug.Log("Game Over!");
-        // Stop the timer
-        timeRemaining = 0;
 
-        // Optionally, trigger a game-over animation or UI
+        // Stop the timer and ensure timeRemaining is 0
+        timeRemaining = 0;
+        UpdateTimerUI(); // Update the UI one last time to reflect the final time
+
+        // Set game over flag
+        isGameOver = true;
+
+        // Trigger a game-over animation or UI
         animator.SetTrigger("GameOver");
     }
 }
