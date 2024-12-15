@@ -8,28 +8,32 @@ public class Spawner : MonoBehaviour
     public GameObject[] spawnObjects;
     private float newSpawnDuration = 1.0f;
     private int currentIndex = 0;
+    private float despawnTime = 5f;
 
     #region Singleton
 
     public static Spawner instance;
 
-    private void Awake() 
+    private void Awake()
     {
         instance = this;
     }
 
     #endregion
 
-    private void Start() 
+    private void Start()
     {
         SpawnPos = transform.position;
         SpawnRandomFruit();
     }
-    
-    void SpawnRandomFruit() 
+
+    void SpawnRandomFruit()
     {
         int randomIndex = Random.Range(0, spawnObjects.Length);
         GameObject newFruit = Instantiate(spawnObjects[randomIndex], SpawnPos, Quaternion.identity);
+        
+        Fruit fruitComponent = newFruit.AddComponent<Fruit>();
+        fruitComponent.SetDespawnTime(despawnTime);
 
         LeftMove leftMove = FindObjectOfType<LeftMove>();
         if (leftMove != null)
@@ -44,10 +48,13 @@ public class Spawner : MonoBehaviour
         }
     }
 
-    void SpawnNewObject() 
+    void SpawnNewObject()
     {
         GameObject newFruit = Instantiate(spawnObjects[currentIndex], SpawnPos, Quaternion.identity);
         currentIndex = (currentIndex + 1) % spawnObjects.Length;
+        
+        Fruit fruitComponent = newFruit.AddComponent<Fruit>();
+        fruitComponent.SetDespawnTime(despawnTime);
 
         LeftMove leftMove = FindObjectOfType<LeftMove>();
         if (leftMove != null)
@@ -62,7 +69,7 @@ public class Spawner : MonoBehaviour
         }
     }
 
-    public void StartSpawning() 
+    public void StartSpawning()
     {
         Invoke("SpawnNewObject", newSpawnDuration);
     }

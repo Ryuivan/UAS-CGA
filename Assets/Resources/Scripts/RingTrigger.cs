@@ -10,9 +10,6 @@ public class RingTrigger : MonoBehaviour
         {
             string fruitType = other.gameObject.name; // Get the name of the fruit GameObject
             scoringSystem.AddScore(fruitType);
-
-            // Optionally, destroy the fruit after scoring
-            Destroy(other.gameObject);
         }
     }
 }
