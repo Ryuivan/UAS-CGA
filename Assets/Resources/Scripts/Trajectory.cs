@@ -48,7 +48,7 @@ public class Trajectory : MonoBehaviour
         _linePoints.Clear();
         _linePoints.Add(startingPoint);
 
-        for (int i = 1; i < _lineSegmentCount; i++) {
+        for (int i = 1; i < _linePointCount; i++) {
             float stepTimePassed = stepTime * i;
 
             Vector3 MovementVector = new Vector3(
@@ -57,7 +57,7 @@ public class Trajectory : MonoBehaviour
                 velocity.z * stepTimePassed
             );
 
-            // Vector3 NewPointOnLine = -MovementVector + startingPoint;
+            Vector3 NewPointOnLine = -MovementVector + startingPoint;
 
             // RaycastHit hit;
             // if (Physics.Raycast(_linePoints[i - 1], NewPointOnLine - _linePoints[i - 1], out hit, (NewPointOnLine - _linePoints[i - 1]).magnitude)) {
@@ -66,16 +66,6 @@ public class Trajectory : MonoBehaviour
             // }
 
             // _linePoints.Add(NewPointOnLine);
-            
-            // RaycastHit hit;
-            // if (Physics.Raycast(_linePoints[i - 1], NewPointOnLine - _linePoints[i - 1], out hit, (NewPointOnLine - _linePoints[i - 1]).magnitude)) {
-            //     Debug.Log("Raycast hit at: " + hit.point);
-            //     _linePoints.Add(hit.point);
-            //     break;
-            // } else {
-            //     Debug.Log("No hit. Adding point: " + NewPointOnLine);
-            //     _linePoints.Add(NewPointOnLine);
-            // }
 
             _linePoints.Add(-MovementVector + startingPoint);
         }
