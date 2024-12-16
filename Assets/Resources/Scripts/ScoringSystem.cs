@@ -23,7 +23,7 @@ public class ScoringSystem : MonoBehaviour
         if (fruitScores.ContainsKey(fruitType))
         {
             score += fruitScores[fruitType];
-            Debug.Log("Added score for: " + fruitType + ". Current score: " + score);
+            // Debug.Log("Added score for: " + fruitType + ". Current score: " + score);
             UpdateScoreUI();
         }
         else

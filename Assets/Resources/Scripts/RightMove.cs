@@ -33,7 +33,7 @@ public class RightMove : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         if (fruit != null)
         {
             activeFruits.Add(fruit);
-            Debug.Log("Fruit added to right move: " + fruit.name);
+            // Debug.Log("Fruit added to right move: " + fruit.name);
         }
     }
 

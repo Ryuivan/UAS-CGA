@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,7 +8,7 @@ public class TimeSystem : MonoBehaviour
     public Animator animator;       // Reference to the Animator component
     public MovingRing movingRing;   // Reference to the MovingRing script
     public GrowAndShrink growAndShrink; // Reference to the GrowAndShrink script
-    public GameObject GameOver;
+    // public GameObject GameOver;
 
     private float timeRemaining = 60f;  // Total time for the game
     private bool movingRingActivated = false;   // Flag to track MovingRing activation
@@ -25,13 +26,13 @@ public class TimeSystem : MonoBehaviour
             timeRemaining -= Time.deltaTime;
 
             // Clamp timeRemaining to avoid negative values
-            timeRemaining = Mathf.Max(timeRemaining, 0);
-
-            // Update the UI
-            UpdateTimerUI();
+            // timeRemaining = Mathf.Max(timeRemaining, 0);
 
             // Trigger script activations
             CheckScriptActivations();
+
+            // Update the UI
+            UpdateTimerUI();
         }
         else
         {
@@ -42,7 +43,7 @@ public class TimeSystem : MonoBehaviour
 
     void UpdateTimerUI()
     {
-        int seconds = Mathf.FloorToInt(timeRemaining % 60);
+        int seconds = Mathf.FloorToInt(timeRemaining);
         animator.SetInteger("Time", seconds); // Use SetFloat if Time is a float parameter
         timerText.text = "Time: " + seconds.ToString();
     }
@@ -54,6 +55,7 @@ public class TimeSystem : MonoBehaviour
             // Activate MovingRing
             if (movingRing != null)
             {
+                Debug.Log(timeRemaining);
                 movingRing.enabled = true;
                 Debug.Log("MovingRing script activated!");
             }
@@ -65,6 +67,7 @@ public class TimeSystem : MonoBehaviour
             // Activate GrowAndShrink
             if (growAndShrink != null)
             {
+                Debug.Log(timeRemaining);
                 growAndShrink.enabled = true;
                 Debug.Log("GrowAndShrink script activated!");
             }
@@ -74,7 +77,7 @@ public class TimeSystem : MonoBehaviour
 
     void EndGame()
     {
-        GameOver.SetActive(true);
+        // GameOver.SetActive(true);
         Debug.Log("Game Over!");
 
         // Stop the timer and ensure timeRemaining is 0
@@ -86,5 +89,11 @@ public class TimeSystem : MonoBehaviour
 
         // Trigger a game-over animation or UI
         animator.SetTrigger("GameOver");
+    }
+
+    public void AddTime(int timeToAdd)
+    {
+        timeRemaining += timeToAdd;
+        CheckScriptActivations();
     }
 }
