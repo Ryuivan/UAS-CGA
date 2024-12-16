@@ -1,4 +1,4 @@
-=============SCRIPT TANPA BONUS TIME================
+// =============SCRIPT TANPA BONUS TIME================
 
 // using UnityEngine;
 // using UnityEngine.UI;
@@ -94,8 +94,8 @@
 
 
 
-===================SCRIPT INCLUDE BONUSTIME===================
-===================MASALAH: GAME OVER MUNCUL DI WAKTU ASLI BUKAN UPDATED BONUS TIME===================
+// ===================SCRIPT INCLUDE BONUSTIME===================
+// ===================MASALAH: GAME OVER MUNCUL DI WAKTU ASLI BUKAN UPDATED BONUS TIME===================
 // using UnityEngine;
 // using UnityEngine.UI;
 
@@ -199,9 +199,9 @@
 
 
 
-================SCRIPT SETELAH PISAH BONUSTIME================
-================TIME SYSTEM HANYA URUS WAKTU================
-================HOOPS URUS AKTIVASI SCRIPT MovingRing DAN GrowAndShrink================
+// ================SCRIPT SETELAH PISAH BONUSTIME================
+// ================TIME SYSTEM HANYA URUS WAKTU================
+// ================HOOPS URUS AKTIVASI SCRIPT MovingRing DAN GrowAndShrink================
 using UnityEngine;
 using UnityEngine.UI;
 using System;
