@@ -1,9 +1,13 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class TimeSystem : MonoBehaviour
 {
     public Text timerText;          // UI Text to display time
+    public Text highScoreText;          // UI Text to display time
+    public Text currentScoreText;          // UI Text to display time
+    public ScoringSystem scoringSystem; // Reference to the ScoringSystem script
     public Animator animator;       // Reference to the Animator component
     public MovingRing movingRing;   // Reference to the MovingRing script
     public GrowAndShrink growAndShrink; // Reference to the GrowAndShrink script
@@ -17,7 +21,16 @@ public class TimeSystem : MonoBehaviour
     void Update()
     {
         // Stop further updates when the game is over
-        if (isGameOver) return;
+        if (isGameOver)
+        {
+            // Destroy all Fruit objects in the scene
+            GameObject[] fruits = GameObject.FindGameObjectsWithTag("Fruit");
+            foreach (GameObject fruit in fruits)
+            {
+                Destroy(fruit);
+            }
+            return;
+        }
 
         // Decrease the timer
         if (timeRemaining > 0)
@@ -25,13 +38,13 @@ public class TimeSystem : MonoBehaviour
             timeRemaining -= Time.deltaTime;
 
             // Clamp timeRemaining to avoid negative values
-            timeRemaining = Mathf.Max(timeRemaining, 0);
-
-            // Update the UI
-            UpdateTimerUI();
+            // timeRemaining = Mathf.Max(timeRemaining, 0);
 
             // Trigger script activations
             CheckScriptActivations();
+
+            // Update the UI
+            UpdateTimerUI();
         }
         else
         {
@@ -42,8 +55,8 @@ public class TimeSystem : MonoBehaviour
 
     void UpdateTimerUI()
     {
-        int seconds = Mathf.FloorToInt(timeRemaining % 60);
-        animator.SetInteger("Time", seconds); // Use SetFloat if Time is a float parameter
+        int seconds = Mathf.FloorToInt(timeRemaining);
+        // animator.SetInteger("Time", seconds); // Use SetFloat if Time is a float parameter
         timerText.text = "Time: " + seconds.ToString();
     }
 
@@ -54,6 +67,7 @@ public class TimeSystem : MonoBehaviour
             // Activate MovingRing
             if (movingRing != null)
             {
+                Debug.Log(timeRemaining);
                 movingRing.enabled = true;
                 Debug.Log("MovingRing script activated!");
             }
@@ -65,6 +79,7 @@ public class TimeSystem : MonoBehaviour
             // Activate GrowAndShrink
             if (growAndShrink != null)
             {
+                Debug.Log(timeRemaining);
                 growAndShrink.enabled = true;
                 Debug.Log("GrowAndShrink script activated!");
             }
@@ -74,6 +89,16 @@ public class TimeSystem : MonoBehaviour
 
     void EndGame()
     {
+        currentScoreText.text = "Current Score: " + scoringSystem.getScore();
+        if (scoringSystem.getScore() > scoringSystem.ReadHighScore())
+        {
+            highScoreText.text = "High Score: " + scoringSystem.getScore();
+            scoringSystem.SaveHighScore();
+        }
+        else
+        {
+            highScoreText.text = "High Score: " + scoringSystem.ReadHighScore();
+        }
         GameOver.SetActive(true);
         Debug.Log("Game Over!");
 
@@ -84,7 +109,26 @@ public class TimeSystem : MonoBehaviour
         // Set game over flag
         isGameOver = true;
 
-        // Trigger a game-over animation or UI
-        animator.SetTrigger("GameOver");
+        // Disable all scripts
+        if (movingRing != null)
+        {
+            movingRing.enabled = false;
+            movingRingActivated = false;
+        }
+        if (growAndShrink != null)
+        {
+            growAndShrink.enabled = false;
+            growAndShrinkActivated = false;
+        }
+        if (animator != null)
+        {
+            animator.enabled = false;
+        }
+    }
+
+    public void AddTime(int timeToAdd)
+    {
+        timeRemaining += timeToAdd;
+        CheckScriptActivations();
     }
 }

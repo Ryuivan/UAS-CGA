@@ -4,6 +4,25 @@ using UnityEngine.UI;
 
 public class ScoringSystem : MonoBehaviour
 {
+    private string highScoreFilePath = "../highscore.txt";
+
+    public void SaveHighScore()
+    {
+        System.IO.File.WriteAllText(highScoreFilePath, score.ToString());
+    }
+
+    public int ReadHighScore()
+    {
+        if (System.IO.File.Exists(highScoreFilePath))
+        {
+            string scoreString = System.IO.File.ReadAllText(highScoreFilePath);
+            if (int.TryParse(scoreString, out int highScore))
+            {
+                return highScore;
+            }
+        }
+        return 0;
+    }
     public Text scoreText;
     private int score = 0;
 
@@ -16,6 +35,11 @@ public class ScoringSystem : MonoBehaviour
         {"Pineapple", 30}
     };
 
+    public int getScore()
+    {
+        return score;
+    }
+
     public void AddScore(string fruitType)
     {
         fruitType = fruitType.Replace("(Clone)", "").Trim();
@@ -23,7 +47,7 @@ public class ScoringSystem : MonoBehaviour
         if (fruitScores.ContainsKey(fruitType))
         {
             score += fruitScores[fruitType];
-            Debug.Log("Added score for: " + fruitType + ". Current score: " + score);
+            // Debug.Log("Added score for: " + fruitType + ". Current score: " + score);
             UpdateScoreUI();
         }
         else
