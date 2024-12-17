@@ -5,10 +5,13 @@ using UnityEngine.UI;
 public class TimeSystem : MonoBehaviour
 {
     public Text timerText;          // UI Text to display time
+    public Text highScoreText;          // UI Text to display time
+    public Text currentScoreText;          // UI Text to display time
+    public ScoringSystem scoringSystem; // Reference to the ScoringSystem script
     public Animator animator;       // Reference to the Animator component
     public MovingRing movingRing;   // Reference to the MovingRing script
     public GrowAndShrink growAndShrink; // Reference to the GrowAndShrink script
-    // public GameObject GameOver;
+    public GameObject GameOver;
 
     private float timeRemaining = 60f;  // Total time for the game
     private bool movingRingActivated = false;   // Flag to track MovingRing activation
@@ -18,7 +21,16 @@ public class TimeSystem : MonoBehaviour
     void Update()
     {
         // Stop further updates when the game is over
-        if (isGameOver) return;
+        if (isGameOver)
+        {
+            // Destroy all Fruit objects in the scene
+            GameObject[] fruits = GameObject.FindGameObjectsWithTag("Fruit");
+            foreach (GameObject fruit in fruits)
+            {
+                Destroy(fruit);
+            }
+            return;
+        }
 
         // Decrease the timer
         if (timeRemaining > 0)
@@ -44,7 +56,7 @@ public class TimeSystem : MonoBehaviour
     void UpdateTimerUI()
     {
         int seconds = Mathf.FloorToInt(timeRemaining);
-        animator.SetInteger("Time", seconds); // Use SetFloat if Time is a float parameter
+        // animator.SetInteger("Time", seconds); // Use SetFloat if Time is a float parameter
         timerText.text = "Time: " + seconds.ToString();
     }
 
@@ -77,7 +89,17 @@ public class TimeSystem : MonoBehaviour
 
     void EndGame()
     {
-        // GameOver.SetActive(true);
+        currentScoreText.text = "Current Score: " + scoringSystem.getScore();
+        if (scoringSystem.getScore() > scoringSystem.ReadHighScore())
+        {
+            highScoreText.text = "High Score: " + scoringSystem.getScore();
+            scoringSystem.SaveHighScore();
+        }
+        else
+        {
+            highScoreText.text = "High Score: " + scoringSystem.ReadHighScore();
+        }
+        GameOver.SetActive(true);
         Debug.Log("Game Over!");
 
         // Stop the timer and ensure timeRemaining is 0
@@ -87,8 +109,21 @@ public class TimeSystem : MonoBehaviour
         // Set game over flag
         isGameOver = true;
 
-        // Trigger a game-over animation or UI
-        animator.SetTrigger("GameOver");
+        // Disable all scripts
+        if (movingRing != null)
+        {
+            movingRing.enabled = false;
+            movingRingActivated = false;
+        }
+        if (growAndShrink != null)
+        {
+            growAndShrink.enabled = false;
+            growAndShrinkActivated = false;
+        }
+        if (animator != null)
+        {
+            animator.enabled = false;
+        }
     }
 
     public void AddTime(int timeToAdd)

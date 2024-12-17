@@ -4,6 +4,25 @@ using UnityEngine.UI;
 
 public class ScoringSystem : MonoBehaviour
 {
+    private string highScoreFilePath = "../highscore.txt";
+
+    public void SaveHighScore()
+    {
+        System.IO.File.WriteAllText(highScoreFilePath, score.ToString());
+    }
+
+    public int ReadHighScore()
+    {
+        if (System.IO.File.Exists(highScoreFilePath))
+        {
+            string scoreString = System.IO.File.ReadAllText(highScoreFilePath);
+            if (int.TryParse(scoreString, out int highScore))
+            {
+                return highScore;
+            }
+        }
+        return 0;
+    }
     public Text scoreText;
     private int score = 0;
 
@@ -15,6 +34,11 @@ public class ScoringSystem : MonoBehaviour
         {"Pear", 25},
         {"Pineapple", 30}
     };
+
+    public int getScore()
+    {
+        return score;
+    }
 
     public void AddScore(string fruitType)
     {
