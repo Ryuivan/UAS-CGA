@@ -12,9 +12,20 @@ public class FruitsController : MonoBehaviour
     [SerializeField]
     private float forceMultiplier = 3;
 
+    [SerializeField]
+    private float moveSpeed = 5f;
+
     void Start() 
     {
         rb = GetComponent<Rigidbody>();
+    }
+
+    private void Update() 
+    {
+        if (!isShoot)
+        {
+            HandleKeyboardMovement();
+        }
     }
 
     private void OnMouseDown() 
@@ -52,5 +63,15 @@ public class FruitsController : MonoBehaviour
     public bool IsShot()
     {
         return isShoot;
+    }
+
+    private void HandleKeyboardMovement()
+    {
+        float horizontalInput = Input.GetAxis("Horizontal");
+        
+        if (horizontalInput != 0)
+        {
+            transform.Translate(Vector3.right * horizontalInput * moveSpeed * Time.deltaTime);
+        }
     }
 }

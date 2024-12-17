@@ -28,11 +28,11 @@ public class ScoringSystem : MonoBehaviour
 
     private Dictionary<string, int> fruitScores = new Dictionary<string, int>
     {
-        {"Apple", 10},
-        {"Banana", 20},
-        {"Orange", 15},
+        {"Apple", 22},
+        {"Banana", 15},
+        {"Orange", 20},
         {"Pear", 25},
-        {"Pineapple", 30}
+        {"Pineapple", 35}
     };
 
     public int getScore()
