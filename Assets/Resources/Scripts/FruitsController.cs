@@ -8,26 +8,28 @@ public class FruitsController : MonoBehaviour
     private Vector3 mouseReleasePosition;
     private Rigidbody rb;
     private bool isShoot;
-    
+
     [SerializeField]
     private float forceMultiplier = 3;
 
     [SerializeField]
     private float moveSpeed = 5f;
 
-    private AudioSource audioSource;
-    [SerializeField] 
-    private AudioClip collisionSFX; // SFX untuk tabrakan
+    [SerializeField]
+    private float dragThreshold = 1f;
 
-    void Start() 
+    private AudioSource audioSource;
+    [SerializeField]
+    private AudioClip collisionSFX;
+
+    void Start()
     {
         rb = GetComponent<Rigidbody>();
 
-        // Pastikan ada AudioSource di objek
         if (GetComponent<AudioSource>() == null)
         {
             audioSource = gameObject.AddComponent<AudioSource>();
-            audioSource.playOnAwake = false; // Matikan Play On Awake
+            audioSource.playOnAwake = false;
         }
         else
         {
@@ -38,7 +40,7 @@ public class FruitsController : MonoBehaviour
         audioSource.volume = 0.5f;
     }
 
-    private void Update() 
+    private void Update()
     {
         if (!isShoot)
         {
@@ -46,12 +48,12 @@ public class FruitsController : MonoBehaviour
         }
     }
 
-    private void OnMouseDown() 
+    private void OnMouseDown()
     {
         mousePressDownPosition = Input.mousePosition;
     }
 
-    private void OnMouseDrag() 
+    private void OnMouseDrag()
     {
         Vector3 forceInit = (Input.mousePosition - mousePressDownPosition);
         Vector3 forceV = (new Vector3(forceInit.x, forceInit.y, forceInit.y) * forceMultiplier);
@@ -60,21 +62,27 @@ public class FruitsController : MonoBehaviour
             Trajectory.instance.UpdateTrajectory(forceV, rb, transform.position);
     }
 
-    private void OnMouseUp() 
+    private void OnMouseUp()
     {
-        Trajectory.instance.HideTrajectory();
         mouseReleasePosition = Input.mousePosition;
-        Shoot(mouseReleasePosition - mousePressDownPosition);
+
+        float dragDistance = Vector3.Distance(mouseReleasePosition, mousePressDownPosition);
+
+        if (dragDistance > dragThreshold)
+        {
+            Trajectory.instance.HideTrajectory();
+            Shoot(mouseReleasePosition - mousePressDownPosition);
+        }
     }
 
-    void Shoot(Vector3 Force) 
+    void Shoot(Vector3 Force)
     {
         if (isShoot)
             return;
 
         rb.AddForce(new Vector3(Force.x, Force.y, Force.y) * forceMultiplier);
         isShoot = true;
-        
+
         Spawner.instance.StartSpawning();
     }
 
@@ -86,7 +94,7 @@ public class FruitsController : MonoBehaviour
     private void HandleKeyboardMovement()
     {
         float horizontalInput = Input.GetAxis("Horizontal");
-        
+
         if (horizontalInput != 0)
         {
             transform.Translate(Vector3.right * horizontalInput * moveSpeed * Time.deltaTime);
@@ -95,7 +103,6 @@ public class FruitsController : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        // Mainkan SFX ketika tabrakan terjadi
         if (collisionSFX != null)
         {
             PlaySFX(collisionSFX);
