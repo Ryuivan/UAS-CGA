@@ -59,14 +59,6 @@ public class Trajectory : MonoBehaviour
 
             Vector3 NewPointOnLine = -MovementVector + startingPoint;
 
-            // RaycastHit hit;
-            // if (Physics.Raycast(_linePoints[i - 1], NewPointOnLine - _linePoints[i - 1], out hit, (NewPointOnLine - _linePoints[i - 1]).magnitude)) {
-            //     _linePoints.Add(hit.point); 
-            //     break;
-            // }
-
-            // _linePoints.Add(NewPointOnLine);
-
             _linePoints.Add(-MovementVector + startingPoint);
         }
 
