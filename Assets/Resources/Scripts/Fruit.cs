@@ -27,11 +27,10 @@ public class Fruit : MonoBehaviour
         if (!IsInView())
         {
             Destroy(gameObject);
-            Spawner.instance.StartSpawning();
         }
     }
 
-        private IEnumerator DespawnAfterTime()
+    private IEnumerator DespawnAfterTime()
     {
         isDespawning = true;
         yield return new WaitForSeconds(despawnTime);
