@@ -25,13 +25,14 @@ public class Spawner : MonoBehaviour
     {
         SpawnPos = transform.position;
         SpawnRandomFruit();
+        StartCoroutine(CheckAndSpawn());
     }
 
     void SpawnRandomFruit()
     {
         int randomIndex = Random.Range(0, spawnObjects.Length);
         GameObject newFruit = Instantiate(spawnObjects[randomIndex], SpawnPos, Quaternion.identity);
-        
+
         Fruit fruitComponent = newFruit.AddComponent<Fruit>();
         fruitComponent.SetDespawnTime(despawnTime);
 
@@ -52,7 +53,7 @@ public class Spawner : MonoBehaviour
     {
         GameObject newFruit = Instantiate(spawnObjects[currentIndex], SpawnPos, Quaternion.identity);
         currentIndex = (currentIndex + 1) % spawnObjects.Length;
-        
+
         Fruit fruitComponent = newFruit.AddComponent<Fruit>();
         fruitComponent.SetDespawnTime(despawnTime);
 
@@ -72,5 +73,18 @@ public class Spawner : MonoBehaviour
     public void StartSpawning()
     {
         Invoke("SpawnNewObject", newSpawnDuration);
+    }
+
+    private IEnumerator CheckAndSpawn()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(1f);
+            
+            if (GameObject.FindObjectsOfType<Fruit>().Length == 0)
+            {
+                SpawnRandomFruit();
+            }
+        }
     }
 }
