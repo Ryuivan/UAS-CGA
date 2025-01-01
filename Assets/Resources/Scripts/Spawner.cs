@@ -9,6 +9,7 @@ public class Spawner : MonoBehaviour
     private float newSpawnDuration = 1.0f;
     private int currentIndex = 0;
     private float despawnTime = 5f;
+    private bool isGameOver = false;
 
     #region Singleton
 
@@ -28,8 +29,15 @@ public class Spawner : MonoBehaviour
         StartCoroutine(CheckAndSpawn());
     }
 
+    public void StopSpawning()
+    {
+        isGameOver = true;
+    }
+
     void SpawnRandomFruit()
     {
+        if (isGameOver) return;
+
         int randomIndex = Random.Range(0, spawnObjects.Length);
         GameObject newFruit = Instantiate(spawnObjects[randomIndex], SpawnPos, Quaternion.identity);
 
@@ -51,6 +59,8 @@ public class Spawner : MonoBehaviour
 
     void SpawnNewObject()
     {
+        if (isGameOver) return;
+
         GameObject newFruit = Instantiate(spawnObjects[currentIndex], SpawnPos, Quaternion.identity);
         currentIndex = (currentIndex + 1) % spawnObjects.Length;
 
@@ -72,14 +82,17 @@ public class Spawner : MonoBehaviour
 
     public void StartSpawning()
     {
-        Invoke("SpawnNewObject", newSpawnDuration);
+        if (!isGameOver)
+        {
+            Invoke("SpawnNewObject", newSpawnDuration);
+        }
     }
 
     private IEnumerator CheckAndSpawn()
     {
-        while (true)
+        while (!isGameOver)
         {
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(0.5f);
             
             if (GameObject.FindObjectsOfType<Fruit>().Length == 0)
             {

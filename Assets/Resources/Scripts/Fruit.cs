@@ -23,11 +23,6 @@ public class Fruit : MonoBehaviour
         {
             StartCoroutine(DespawnAfterTime());
         }
-
-        if (!IsInView())
-        {
-            Destroy(gameObject);
-        }
     }
 
     private IEnumerator DespawnAfterTime()
@@ -35,12 +30,5 @@ public class Fruit : MonoBehaviour
         isDespawning = true;
         yield return new WaitForSeconds(despawnTime);
         Destroy(gameObject);
-    }
-
-    private bool IsInView()
-    {
-        if (Camera.main == null) return false;
-        Vector3 screenPoint = Camera.main.WorldToViewportPoint(transform.position);
-        return screenPoint.x >= 0 && screenPoint.x <= 1 && screenPoint.y >= 0 && screenPoint.y <= 1 && screenPoint.z > 0;
     }
 }
