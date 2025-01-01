@@ -1,10 +1,11 @@
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using System.IO;
 
 public class ScoringSystem : MonoBehaviour
 {
-    private string highScoreFilePath = "../highscore.txt";
+    private string highScoreFilePath = Path.Combine(Application.dataPath, "../highscore.txt");
 
     public void SaveHighScore()
     {
