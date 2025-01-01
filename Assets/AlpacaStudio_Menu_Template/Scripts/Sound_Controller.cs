@@ -17,6 +17,7 @@ public class Sound_Controller : MonoBehaviour
     void Awake()
     {
         _audioSource = GetComponent<AudioSource>();
+        _audioSource.volume = 0.75f; // Set volume audio
 
         // Cek PlayerPrefs untuk status mute
         if (PlayerPrefs.HasKey("_Mute"))
